@@ -2,9 +2,10 @@ import sys
 import tkinter as tk
 from tkinter import ttk
 from process import CpuBar
+from widget_update import ConfigureWidgets
 
 
-class Application(tk.Tk):
+class Application(tk.Tk, ConfigureWidgets):
     def __init__(self):
         tk.Tk.__init__(self)
         self.attributes('-alpha', 1)  # непрозрачность 100%
@@ -19,6 +20,9 @@ class Application(tk.Tk):
         # вызов методов класса Application
         self.set_ui()
         self.make_bar_cpu_usage()
+
+        # вызов метода, унаследованного ConfigureWidgets из модуля widget_update.py
+        self.configure_cpu_bar()
 
     def set_ui(self):
         exit_but = ttk.Button(self, text='Выход', command=self.app_exit)
@@ -48,6 +52,7 @@ class Application(tk.Tk):
         ttk.Label(self.bar, text=f'Physical cores: {self.cpu.cpu_count}, Logical cores: {self.cpu.cpu_count_logical}',
                   anchor=tk.CENTER).pack(fill=tk.X)
 
+        # в списках хранятся метки и прогресс бары
         self.list_label = []
         self.list_pbar = []
 

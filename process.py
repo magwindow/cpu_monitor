@@ -1,5 +1,5 @@
 import psutil as pt
-from time import sleep
+
 
 class CpuBar:
     def __init__(self):
@@ -9,13 +9,3 @@ class CpuBar:
     def cpu_percent_return(self):
         """Возвращает загрузку процессов"""
         return pt.cpu_percent(percpu=True)
-
-
-x = CpuBar()
-
-for _ in range(10):
-    print(x.cpu_percent_return())
-    sleep(1)
-
-
-
