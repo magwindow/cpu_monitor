@@ -1,5 +1,5 @@
 import psutil as pt
-
+from time import sleep
 
 class CpuBar:
     def __init__(self):
@@ -15,6 +15,7 @@ x = CpuBar()
 
 for _ in range(10):
     print(x.cpu_percent_return())
+    sleep(1)
 
 
 
