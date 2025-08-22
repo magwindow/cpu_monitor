@@ -1,6 +1,7 @@
 import sys
 import tkinter as tk
 from tkinter import ttk
+from process import CpuBar
 
 
 class Application(tk.Tk):
@@ -12,7 +13,12 @@ class Application(tk.Tk):
         self.resizable(False, False)
         self.title('CPU-RAM')
 
+        # вызов класса из модуля process.py
+        self.cpu = CpuBar()
+
+        # вызов методов класса Application
         self.set_ui()
+        self.make_bar_cpu_usage()
 
     def set_ui(self):
         exit_but = ttk.Button(self, text='Выход', command=self.app_exit)
@@ -36,6 +42,22 @@ class Application(tk.Tk):
 
         self.bind_class('Tk', '<Enter>', self.enter_mouse)
         self.bind_class('Tk', '<Leave>', self.leave_mouse)
+
+    def make_bar_cpu_usage(self):
+        """Показывает сколько ядер и процессов"""
+        ttk.Label(self.bar, text=f'Physical cores: {self.cpu.cpu_count}, Logical cores: {self.cpu.cpu_count_logical}',
+                  anchor=tk.CENTER).pack(fill=tk.X)
+
+        self.list_label = []
+        self.list_pbar = []
+
+        for _ in range(self.cpu.cpu_count_logical):
+            self.list_label.append(ttk.Label(self.bar, anchor=tk.CENTER))
+            self.list_pbar.append(ttk.Progressbar(self.bar, length=100))
+
+        for i in range(self.cpu.cpu_count_logical):
+            self.list_label[i].pack(fill=tk.X)
+            self.list_pbar[i].pack(fill=tk.X)
 
     def enter_mouse(self, event):
         if self.combo_win.current() == 0 or 1:
