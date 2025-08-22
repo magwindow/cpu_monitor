@@ -17,10 +17,13 @@ class Application(tk.Tk, ConfigureWidgets):
         # вызов класса из модуля process.py
         self.cpu = CpuBar()
 
+        # вызов метода
+        self.run_set_ui()
+
+    def run_set_ui(self):
         # вызов методов класса Application
         self.set_ui()
         self.make_bar_cpu_usage()
-
         # вызов метода, унаследованного ConfigureWidgets из модуля widget_update.py
         self.configure_cpu_bar()
 
@@ -80,11 +83,11 @@ class Application(tk.Tk, ConfigureWidgets):
         self.ram_bar.pack(side=tk.LEFT)
 
         # кнопки полного режима и перемещения
-        ttk.Button(self, text='Полный режим', width=15).pack(side=tk.RIGHT)
-        ttk.Button(self, text='Переместить', width=15).pack(side=tk.RIGHT)
+        ttk.Button(self, text='Полный режим', command=self.make_full_win, width=15).pack(side=tk.RIGHT)
+        ttk.Button(self, text='Переместить', command=self.configure_win, width=15).pack(side=tk.RIGHT)
 
         self.update()
-        # self.configure_minimal_win()
+        self.configure_minimal_win()
 
     def enter_mouse(self, event):
         """Срабатывает при на ведение курсора мыши на виджет"""
@@ -106,6 +109,14 @@ class Application(tk.Tk, ConfigureWidgets):
             self.clear_win()  # вызов метода класса ConfigureWidgets
             self.update()  # обновляем окно
             self.make_minimal_win()  # вызов метода, который прорисовывает новые виджеты
+
+    def make_full_win(self):
+        self.after_cancel(self.wheel)
+        self.clear_win()
+        self.update()
+        self.run_set_ui()
+        self.enter_mouse('')
+        self.combo_win.current(1)
 
     def app_exit(self):
         """Метод класса, который выходит из приложения при нажатии на кнопку 'Выход'"""

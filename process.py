@@ -11,8 +11,10 @@ class CpuBar:
         return pt.cpu_percent(percpu=True)
 
     def cpu_one_return(self):
+        """Возвращает суммарную загрузку процессора"""
         return pt.cpu_percent()
 
     def ram_usage(self):
+        """Возвращает загрузку оперативной памяти"""
         return pt.virtual_memory()
 
