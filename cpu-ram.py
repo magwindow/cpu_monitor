@@ -32,7 +32,7 @@ class Application(tk.Tk, ConfigureWidgets):
         self.bar2.pack(fill=tk.X)
 
         # выпадающий список
-        self.combo_win = ttk.Combobox(self.bar2, values=["Скрывать", "Не скрывать", "Свернуть"],
+        self.combo_win = ttk.Combobox(self.bar2, values=["Скрывать", "Не скрывать", "Мин.режим"],
                                       state='readonly', width=12)
         self.combo_win.current(1)
         self.combo_win.pack(side=tk.LEFT)
@@ -46,6 +46,7 @@ class Application(tk.Tk, ConfigureWidgets):
 
         self.bind_class('Tk', '<Enter>', self.enter_mouse)
         self.bind_class('Tk', '<Leave>', self.leave_mouse)
+        self.combo_win.bind('<<ComboboxSelected>>', self.choise_combo)
 
     def make_bar_cpu_usage(self):
         """Показывает сколько ядер и процессов"""
@@ -69,13 +70,42 @@ class Application(tk.Tk, ConfigureWidgets):
         self.ram_bar = ttk.Progressbar(self.bar, length=100)
         self.ram_bar.pack(fill=tk.X)
 
+    def make_minimal_win(self):
+        # прогресс бар для загрузки процессора
+        self.bar_one = ttk.Progressbar(self, length=100)
+        self.bar_one.pack(side=tk.LEFT)
+
+        # прогресс бар для загрузки оперативной памяти
+        self.ram_bar = ttk.Progressbar(self, length=100)
+        self.ram_bar.pack(side=tk.LEFT)
+
+        # кнопки полного режима и перемещения
+        ttk.Button(self, text='Полный режим', width=15).pack(side=tk.RIGHT)
+        ttk.Button(self, text='Переместить', width=15).pack(side=tk.RIGHT)
+
+        self.update()
+        # self.configure_minimal_win()
+
     def enter_mouse(self, event):
+        """Срабатывает при на ведение курсора мыши на виджет"""
         if self.combo_win.current() == 0 or 1:
             self.geometry('')
 
     def leave_mouse(self, event):
+        """Срабатывает убирание курсора мыши с виджета"""
         if self.combo_win.current() == 0:
             self.geometry(f'{self.winfo_width()}x1')
+
+    def choise_combo(self, event):
+        if self.combo_win.current() == 2:
+            self.enter_mouse('')
+            self.unbind_class('Tk', '<Enter>')  # отвязываем событие на ведение курсора мыши
+            self.unbind_class('Tk', '<Leave>')  # отвязываем событие убирание курсора мыши
+            self.combo_win.unbind('<<ComboboxSelected>>')  # отвязываем событие ComboboxSelected
+            self.after_cancel(self.wheel)  # прерывание процесса обновления self.wheel
+            self.clear_win()  # вызов метода класса ConfigureWidgets
+            self.update()  # обновляем окно
+            self.make_minimal_win()  # вызов метода, который прорисовывает новые виджеты
 
     def app_exit(self):
         """Метод класса, который выходит из приложения при нажатии на кнопку 'Выход'"""
