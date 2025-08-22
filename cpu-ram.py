@@ -1,4 +1,6 @@
+import sys
 import tkinter as tk
+from tkinter import ttk
 
 
 class Application(tk.Tk):
@@ -9,6 +11,16 @@ class Application(tk.Tk):
         self.overrideredirect(True)  # убирает рамки
         self.resizable(False, False)
         self.title('CPU-RAM')
+
+        self.set_ui()
+
+    def set_ui(self):
+        exit_but = ttk.Button(self, text='Выход', command=self.app_exit)
+        exit_but.pack(fill=tk.X)
+
+    def app_exit(self):
+        self.destroy()
+        sys.exit()
 
 
 if __name__ == '__main__':
