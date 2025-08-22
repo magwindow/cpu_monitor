@@ -5,8 +5,16 @@ class ConfigureWidgets:
             self.list_label[i].configure(text=f'core {i + 1} usage: {r[i]}%')
             self.list_pbar[i].configure(value=r[i])
 
-        self.after(1000, self.configure_cpu_bar)  # обновляет прогресс бары в 1 секунду
+        r2 = self.cpu.ram_usage()
+        self.ram_lab.configure(text=f'RAM Занято: {r2[2]}%\nИспользуется: {round(r2[3] / 1048576)} Mb,\
+                  \nСвободно: {round(r2[1] / 1048576)} Mb')
+        self.ram_bar.configure(value=r2[2])
+        self.wheel = self.after(1000, self.configure_cpu_bar)
 
-
-
-
+    def configure_win(self):
+        """Добавляет, убирает рамку при нажатии на кнопку 'Обновить'"""
+        if self.wm_overrideredirect():  # если окно с рамкой
+            self.overrideredirect(False)  # убираем рамку
+        else:
+            self.overrideredirect(True)  # ставим рамку
+        self.update()  # обновляет содержимое окна

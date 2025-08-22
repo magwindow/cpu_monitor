@@ -38,7 +38,7 @@ class Application(tk.Tk, ConfigureWidgets):
         self.combo_win.pack(side=tk.LEFT)
 
         # кнопки "Обновить" и ">>>"
-        ttk.Button(self.bar2, text='Обновить').pack(side=tk.LEFT)
+        ttk.Button(self.bar2, text='Обновить', command=self.configure_win).pack(side=tk.LEFT)
         ttk.Button(self.bar2, text='>>>').pack(side=tk.LEFT)
 
         self.bar = ttk.LabelFrame(self, text='Мощность')
@@ -63,6 +63,11 @@ class Application(tk.Tk, ConfigureWidgets):
         for i in range(self.cpu.cpu_count_logical):
             self.list_label[i].pack(fill=tk.X)
             self.list_pbar[i].pack(fill=tk.X)
+
+        self.ram_lab = ttk.Label(self.bar, text='', anchor=tk.CENTER)
+        self.ram_lab.pack(fill=tk.X)
+        self.ram_bar = ttk.Progressbar(self.bar, length=100)
+        self.ram_bar.pack(fill=tk.X)
 
     def enter_mouse(self, event):
         if self.combo_win.current() == 0 or 1:
